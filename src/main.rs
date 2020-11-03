@@ -18,7 +18,7 @@ fn main() {
         }
     });
 
-    println!("Line: {}\nPosition: {}", line, pos);
+    println!("line: {}\nposition: {}", line, pos);
 }
 
 fn open(path: &str) -> String {
