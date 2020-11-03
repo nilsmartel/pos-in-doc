@@ -1,13 +1,26 @@
 const ERROR: &'static str = "require 2 arguments <pos> <file>";
 
+fn exit(s: &str) -> ! {
+    eprintln!("{}", s);
+    std::process::exit(1);
+}
+
 fn main() {
     let mut args = std::env::args().skip(1);
-    let pos = args
-        .next()
-        .expect(ERROR)
-        .parse::<usize>()
-        .expect("expect first argument to be a number");
-    let path = args.next().expect(ERROR);
+
+    let pos = match args.next() {
+        Some(arg) => match arg.parse::<usize>() {
+            Ok(n) => n,
+            _ => exit("expect first argument to be a number"),
+        },
+        None => exit(ERROR),
+    };
+
+    let path = match args.next() {
+        None => exit(ERROR),
+        Some(path) => path,
+    };
+
     let file = open(&path);
 
     let (line, pos) = file.chars().take(pos).fold((0, 0), |(line, pos), c| {
@@ -22,6 +35,12 @@ fn main() {
 }
 
 fn open(path: &str) -> String {
-    let content = std::fs::read(path).expect("file not found");
-    String::from_utf8(content).expect("file is not valid utf-8. Expect file to be be valid utf-8")
+    let content = match std::fs::read(path) {
+        Ok(file) => file,
+        Err(_) => exit("file not found"),
+    };
+    match String::from_utf8(content) {
+        Ok(content) => content,
+        Err(_) => exit("expected file to be valid utf-8"),
+    }
 }
