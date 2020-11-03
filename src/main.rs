@@ -1,4 +1,7 @@
-const ERROR: &'static str = "require 2 arguments <pos> <file>";
+const ERROR: &'static str = "pos-in-doc
+author: Nils Martel
+Usage: pos-in-doc <pos> <file>
+";
 
 fn exit(s: &str) -> ! {
     eprintln!("{}", s);
